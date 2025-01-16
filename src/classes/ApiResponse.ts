@@ -7,8 +7,7 @@ export type APIResponse<T> = {
 
 export type APIResponseList<T> = {
   data: {
-    info: InfoApi
-    _embedded: T
+    info: InfoApi<T>
   }
   status: number
 }

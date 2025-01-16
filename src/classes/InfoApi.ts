@@ -1,13 +1,11 @@
-export class InfoApi {
-    count: number
-    pages: number
-    totalElements: number
-    totalPages: number
+import { Page } from "@/classes/Page"
+
+export class InfoApi<T> {
+    page: Page
+    _embedded: T
   
-    constructor(count: number, pages: number, totalElements: number, totalPages: number) {
-      this.count = count
-      this.pages = pages
-      this.totalElements = totalElements
-      this.totalPages = totalPages
+    constructor(page: Page, _embedded: T) {
+      this.page = page
+      this._embedded = _embedded
     }
   }

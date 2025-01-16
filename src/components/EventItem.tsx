@@ -2,6 +2,12 @@
 import { Event }  from '@/classes/Event'
 
 function EventItem({eventItem}: {eventItem: Event }) {
+
+  const formatDate = (date: string, time: string): string => {
+    const dateSplitted = date.split("-");
+    const timeSplitted = time.split(":");
+    return `${dateSplitted[2]}-${dateSplitted[1]}-${dateSplitted[0]} ${timeSplitted[0]}:${timeSplitted[1]}`
+  }
   return (
     <div className='event'>
      <img className='event__img' src={eventItem.images[0].url}></img>
@@ -12,7 +18,7 @@ function EventItem({eventItem}: {eventItem: Event }) {
         <div className='event__content__subtitle__separator'></div>
         <div>{ eventItem._embedded.venues[0].address.line1 }</div>
         </div> 
-      <div className='event__content__subtitle'>{ eventItem.dates.start.localDate } { eventItem.dates.start.localTime }</div>
+      <div className='event__content__subtitle'>{ formatDate(eventItem.dates.start.localDate, eventItem.dates.start.localTime) }</div>
      </div>
     </div>
   )
