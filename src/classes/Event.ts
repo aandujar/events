@@ -4,6 +4,7 @@ import { LocationWrapper } from '@/classes/LocationWrapper'
 import { SalesDatesWrapper } from '@/classes/SalesDatesWrapper'
 import { PriceRange } from '@/classes/PriceRange'
 import { DatesWrapper } from '@/classes/DatesWrapper'
+import { Classification } from '@/Classification'
 
 export class Event {
     id: number
@@ -12,23 +13,26 @@ export class Event {
     venues: LocationWrapper
     dates: DatesWrapper
     sales: SalesDatesWrapper
-    priceRange: PriceRange[]
+    priceRanges: PriceRange[]
+    classifications: Classification[]
   
     constructor(
       id: number,
       name: string,
       images: Img[],
       venues: LocationWrapper,
-      priceRange: PriceRange[],
+      priceRanges: PriceRange[],
       dates: DatesWrapper,
-      sales: SalesDatesWrapper
+      sales: SalesDatesWrapper,
+      classifications: Classification[]
     ) {
       this.id = id
       this.name = name
       this.images = images
       this.venues = venues
-      this.priceRange = priceRange
+      this.priceRanges = priceRanges
       this.dates = dates
       this.sales = sales
+      this.classifications = classifications
        }
   }

@@ -1,5 +1,12 @@
+@import '@fontsource/roboto/300.css';
+@import '@fontsource/roboto/400.css';
+@import '@fontsource/roboto/500.css';
+@import '@fontsource/roboto/700.css';
+
 .app{
   background-color: #fafdfd;
+  height: '100vh';
+  width: '100vw';
 }
 
 .flex-row {
@@ -10,8 +17,23 @@
   justify-content: center;
 }
 
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .w100{
   width: 100%;
+}
+
+.h100{
+  height: 100%;
+}
+
+.full-screen{
+  height: 100vh;
+  width: 100vw;
 }
 
 .event {
@@ -20,6 +42,13 @@
   padding: 10px;
   margin: 20px;
   border-radius: 10px;
+  box-shadow: none;
+  transition: box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+  }
 
   &__img {
     height: 180px;
@@ -83,18 +112,14 @@
     border-radius: 30%;
     height: 40px;
     width: 40px;
-    border: 1px solid black;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.3rem;
-    font-weight: 530;
+    font-weight: 500;
     margin-left: 5px;
     margin-right: 5px;
-
-    &--action {
-      font-weight: 600;
-    }
 
     &--selected {
       background-color: #f4d34a;
@@ -106,5 +131,242 @@
       background-color: #f0f3f4;
       transition: background-color 0.2s ease-in-out;
     }
+  }
+}
+
+.event-detail {
+
+  &__header {
+    position: relative;
+    z-index: 0;
+    margin-bottom: 30px;
+
+    &__background {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 300px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    filter: blur(12px);
+  }
+
+  &__content {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 300px;
+    top: 30px;
+    left: 60px;
+    display: flex;
+    flex-direction: row;
+
+  &__img {
+    width: 200px;
+    height: 150px;
+    border-radius: 8px;
+    margin: 5px;
+  }
+
+  &__data {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+
+    &__title {
+      color: white;
+      font-size: 1.6em;
+      font-weight: 600;
+    }
+
+    &__subtitle {
+      color: white;
+      font-size: 1.3em;
+      font-weight: 530;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 5px;
+
+      &__separator {
+        height: 6px;
+        width: 6px;
+        margin-right: 5px;
+        margin-left: 5px;
+        border-radius: 50%;
+        background-color: white;
+      }
+    }
+
+
+  }
+}
+}
+
+&__body {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  &__item {
+    width: 50%;
+  }
+
+}
+
+@media (max-width: 500px) {
+  &__body {
+    display: flex;
+    flex-direction: column;
+
+    &__item {
+      width: 100%;
+    }
+  }
+
+}
+
+}
+
+.map-text {
+  margin-bottom: 5px;
+
+  &--title {
+    font-size: 1.4em;
+    font-weight: bold;
+  }
+
+  &--subtitle {
+    font-size: 1.2em;
+    font-weight: 540;
+  }
+}
+
+.event-tickets {
+  padding: 10px;
+
+  &__title {
+    font-size: 1.6em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+
+    &__text {
+      font-size: 1.3em;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+
+      &--margin {
+        margin-right: 10px
+      }
+
+      &__rounded {
+        height: 10px;
+        width: 10px;
+        margin-right: 5px;
+        border-radius: 50%;
+      }
+    }
+  }
+}
+
+.login-register {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-image: url("@/assets/concert.jpg");;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 0;
+
+  &__item {
+    position: relative;
+    z-index: 0;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    padding: 60px 20px 20px 20px;
+    background-color: white;
+    width: 400px;
+    border-radius: 10px;
+    max-height: 1000px;
+    transition: max-height 0.2s ease-in-out;
+
+    &__button {
+      position: absolute;
+      z-index: 1;
+      top: 10px;
+      right: 10px;
+      width: 140px;
+      height: 35px;
+      display: flex;
+      flex-direction: row;
+
+      &__element {
+        width: 50%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s ease-in-out;
+        
+
+          &--left {
+            border-top-left-radius:  30px;
+            border-bottom-left-radius:  30px;
+          }
+
+          &--right {
+            border-top-right-radius:  30px;
+            border-bottom-right-radius: 30px;
+          }
+
+          &--selected {
+            background-color: #1975D0;
+            color: white;
+          }
+
+          &--not-selected {
+            background-color: #d3d3d3;
+            color: black;
+            cursor: pointer;
+          }
+
+      }
+  
+    }
+  }
+
+  @media (max-width: 500px) {
+    &__item {
+      width: 300px;
+    }
+  }
+  
+  @media (max-width: 400px) {
+    &__item {
+      width: 250px;
+    }
+  }
+  
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+
+  &__item {
+    margin: 10px;
   }
 }

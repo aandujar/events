@@ -11,10 +11,6 @@ function Pagination({page, totalPages, changePage}: {page: number, totalPages: n
       classes += page === Number(elementPage) ? 'pagination__page--selected' : 'pagination__page--not-selected';
     }
 
-    if(!Number(elementPage)){
-      classes += " pagination__page--action"
-    }
-
     return classes;
   }
 

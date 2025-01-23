@@ -1,15 +1,23 @@
 
 import { Event }  from '@/classes/Event'
 
-function EventItem({eventItem}: {eventItem: Event }) {
+function EventItem({ eventItem, goToDetail }: {eventItem: Event, goToDetail: Function }) {
 
   const formatDate = (date: string, time: string): string => {
-    const dateSplitted = date.split("-");
-    const timeSplitted = time.split(":");
-    return `${dateSplitted[2]}-${dateSplitted[1]}-${dateSplitted[0]} ${timeSplitted[0]}:${timeSplitted[1]}`
+    let formattedDate = "";
+    if(date) {
+      const dateSplitted = date.split("-");
+      formattedDate = `${dateSplitted[2]}-${dateSplitted[1]}-${dateSplitted[0]} `;
+    }
+    if(time){
+      const timeSplitted = time.split(":");
+      formattedDate += `${timeSplitted[0]}:${timeSplitted[1]}`
+    }
+    return formattedDate;
   }
+  
   return (
-    <div className='event'>
+    <div className='event' onClick={() => goToDetail(eventItem.id)}>
      <img className='event__img' src={eventItem.images[0].url}></img>
      <div className='event__content'>
       <div className='event__content__title'>{ eventItem.name }</div>
