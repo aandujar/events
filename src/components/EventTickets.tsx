@@ -74,7 +74,7 @@ import { EventStatusEnum } from "../enum/EventStatusEnum";
                 </div>
             </div>
             <div className="event-tickets__item">
-                <div className="event-tickets__item__text event-tickets__item__text--margin">Rango de precios</div>
+                <div className="event-tickets__item__text event-tickets__item__text--margin">Rango de precios:</div>
                 <div className="event-tickets__item__text">{`${formatPrice(event.priceRanges[0].min, event.priceRanges[0].currency)} - ${formatPrice(event.priceRanges[0].max, event.priceRanges[0].currency)}`}</div>
             </div>
             <div className="event-tickets__item">

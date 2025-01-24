@@ -5,8 +5,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Button from '@mui/material/Button';
+import { collection, query, where, getDocs, and } from 'firebase/firestore';
+import { db } from '../firebase.config.js';
 
-function Login() {
+function Login({ doLogin }: { doLogin: Function }) {
 
   const [email, setEmail] = useState<string>('')
   const [emailError, setEmailError] = useState<string>(null)
@@ -14,6 +16,8 @@ function Login() {
   const [passwordError, setPasswordError] = useState<string>(null)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [validate, setValidate] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>("")
 
   const toggleShowPassword = (): void => {
     setShowPassword(!showPassword)
@@ -27,11 +31,35 @@ function Login() {
     setPassword(event.target.value)
   }
 
-  const doLogin = (): void => {
+  const checkKey = (event: any): void => {
+    if(event.key === "Enter") {
+      doLoginEvent();
+    }
+  }
+
+  const doLoginEvent = (): void => {
     setValidate(!validate);
-    setTimeout(() => {
-      if(emailError !== null && emailError.length === 0 && passwordError !== null && passwordError?.length === 0){
-        console.log("do login")
+    setTimeout(async() => {
+      if(emailError !== null && emailError.length === 0 && passwordError !== null && passwordError.length === 0){
+                  setLoading(true);
+                  setErrorMessage("");
+                try {
+                  const user = await getDocs(query(collection(db, "user"), and(where("email", "==", email), where("password", "==", password))));
+                  if(user.docs.length > 0){
+                   doLogin(JSON.stringify({
+                      email: user.docs[0].data().email,
+                      username: user.docs[0].data().username
+                    }))
+                    setLoading(false);     
+                  } else {               
+                    setErrorMessage("Email o contraseña incorrectas");
+                    setLoading(false); 
+                  }
+                 
+              } catch(e){
+                setErrorMessage("Ha ocurrido un error");
+                setLoading(false);
+              }
       }
     }, 500)
   }
@@ -66,12 +94,12 @@ function Login() {
       <div className='login'>
         <div className='login__item'>
           <TextField id="email" label="Email" variant="outlined" sx={{ m: 1, width: '25ch' }}        
-           error={emailError?.length > 0} helperText={emailError ? emailError : ''} value={email} onChange={handleEmailChanged} />
+           error={emailError?.length > 0} helperText={emailError ? emailError : ''} value={email} onChange={handleEmailChanged} onKeyUp={checkKey} /> 
         </div>
         <div className='login__item'>
          <TextField id="password" label="Contraseña" variant="outlined" sx={{ m: 1, width: '25ch' }}
          type={showPassword ? 'text' : 'password'}  
-         error={passwordError?.length > 0} helperText={passwordError ? passwordError : ''} value={password} onChange={handlePasswordChanged}
+         error={passwordError?.length > 0} helperText={passwordError ? passwordError : ''} value={password} onChange={handlePasswordChanged} onKeyUp={checkKey}
          slotProps={{
           input: {
            endAdornment: <InputAdornment position="end">
@@ -90,8 +118,9 @@ function Login() {
          />
         </div>
         <div className='login__item'>
-          <Button variant="contained"  sx={{ m: 1, width: '25ch' }} onClick={doLogin}>Acceder</Button>
+          <Button variant="contained" loading={loading} sx={{ m: 1, width: '25ch' }} onClick={doLoginEvent}>Acceder</Button>
         </div>
+        <div className='error-message'>{ errorMessage.length > 0 ? errorMessage : '' }</div>
       </div>
     )
 

@@ -5,8 +5,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Button from '@mui/material/Button';
+import { collection, addDoc, CollectionReference, DocumentData, query, where, getDocs, or } from 'firebase/firestore';
+import { db } from '../firebase.config.js';
 
-function Register() {
+function Register({ doLogin }: { doLogin: Function }) {
 
   const [email, setEmail] = useState<string>('')
   const [emailError, setEmailError] = useState<string>(null)
@@ -19,6 +21,8 @@ function Register() {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showRepeatPassword, setShowRepeatPassword] = useState<boolean>(false)
   const [validate, setValidate] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>("")
 
   const toggleShowPassword = (): void => {
     setShowPassword(!showPassword)
@@ -44,11 +48,43 @@ function Register() {
     setRepeatPassword(event.target.value)
   }
 
-  const doRegister = (): void => {
+  const checkKey = (event: any): void => {
+    if(event.key === "Enter") {
+      doRegister();
+    }
+  }
+
+  const doRegister = async () => {
     setValidate(!validate);
-    setTimeout(() => {
-      if(emailError !== null && emailError.length === 0 && usernameError !== null && usernameError?.length === 0 && passwordError !== null && passwordError?.length === 0 && repeatPassword !== null && repeatPassword?.length === 0){
-        console.log("do register")
+
+
+    setTimeout(async () => {    
+      if(emailError !== null && emailError.length === 0 && usernameError !== null && usernameError.length === 0 && passwordError !== null && passwordError.length === 0 && repeatPasswordError !== null && repeatPasswordError.length === 0){
+          setLoading(true);
+          setErrorMessage("");
+        try {
+          const existentUser = await getDocs(query(collection(db, "user"), or(where("username", "==", username), where("email", "==", email))));
+          if(existentUser.docs.length > 0){
+            setErrorMessage("Nombre de usuario o email en uso");
+            setLoading(false);
+          } else {
+            const connectionBd: CollectionReference<DocumentData, DocumentData> = collection(db, 'user');
+            const user = await addDoc(connectionBd, {
+              email: email,
+              username: username,
+              password: password  
+            });
+            doLogin(JSON.stringify({
+              email: email,
+              username: username, 
+            }))
+            setLoading(false);      
+          }
+         
+      } catch(e){
+        setErrorMessage("Ha ocurrido un error");
+        setLoading(false);
+      }
       }
     }, 500)
   }
@@ -109,16 +145,16 @@ function Register() {
       <div className='login'>
         <div className='login__item'>
           <TextField id="email" label="Email" variant="outlined" sx={{ m: 1, width: '25ch' }}        
-           error={emailError?.length > 0} helperText={emailError ? emailError : ''} value={email} onChange={handleEmailChanged} />
+           error={emailError?.length > 0} helperText={emailError ? emailError : ''} value={email} onChange={handleEmailChanged} onKeyUp={checkKey} />
         </div>
         <div className='login__item'>
           <TextField id="username" label="Nombre de usuario" variant="outlined" sx={{ m: 1, width: '25ch' }}
-          error={usernameError?.length > 0} helperText={usernameError ? usernameError : ''} value={username} onChange={handleUsernameChanged} />
+          error={usernameError?.length > 0} helperText={usernameError ? usernameError : ''} value={username} onChange={handleUsernameChanged} onKeyUp={checkKey} />
         </div>
         <div className='login__item'>
          <TextField id="password" label="Contraseña" variant="outlined" sx={{ m: 1, width: '25ch' }}
          type={showPassword ? 'text' : 'password'}  
-         error={passwordError?.length > 0} helperText={passwordError ? passwordError : ''} value={password} onChange={handlePasswordChanged}
+         error={passwordError?.length > 0} helperText={passwordError ? passwordError : ''} value={password} onChange={handlePasswordChanged} onKeyUp={checkKey}
          slotProps={{
           input: {
            endAdornment: <InputAdornment position="end">
@@ -139,7 +175,7 @@ function Register() {
         <div className='login__item'>
         <TextField id="repeatPassword" label="Repetir contraseña" variant="outlined" sx={{ m: 1, width: '25ch' }}
          type={showRepeatPassword ? 'text' : 'password'}
-         error={repeatPasswordError?.length > 0} helperText={repeatPasswordError ? repeatPasswordError : ''} value={repeatPassword} onChange={handlePasswordRepeatChanged}
+         error={repeatPasswordError?.length > 0} helperText={repeatPasswordError ? repeatPasswordError : ''} value={repeatPassword} onChange={handlePasswordRepeatChanged} onKeyUp={checkKey}
          slotProps={{
           input: {
            endAdornment: <InputAdornment position="end">
@@ -158,8 +194,9 @@ function Register() {
          />
         </div>
         <div className='login__item'>
-          <Button variant="contained"  sx={{ m: 1, width: '25ch' }} onClick={doRegister}>Registrar</Button>
+          <Button variant="contained" loading={loading}  sx={{ m: 1, width: '25ch' }} onClick={doRegister}>Registrar</Button>
         </div>
+        <div className='error-message'>{ errorMessage.length > 0 ? errorMessage : '' }</div>
       </div>
     )
 
