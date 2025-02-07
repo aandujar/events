@@ -7,11 +7,14 @@ import { Pagination } from '@/classes/Pagination'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector  } from 'react-redux'
+import { setEvents } from '@/store/eventSlice.js'
 
 function EventsPage() {
 
+    const dispatch = useDispatch()
     const navigate = useNavigate();
-    const [events, setEvents] = useState<Event[]>([])
+    const events = useSelector(store => store.eventsReducerStore.events)
     const [page, setPage] = useState<number>(1)
     const [totalPages, setTotalPages] = useState<number>(0)
     const [loading, setLoading] = useState<boolean>(false)
@@ -37,7 +40,7 @@ function EventsPage() {
         setLoading(true)
       EventService.getAll(new Pagination(page -1))
       .then((resp: APIResponseList<Event[]>) => {
-          setEvents(resp.status === 200 ? resp.data._embedded.events : [])
+          dispatch(setEvents(resp.status === 200 ? resp.data._embedded.events : []))
           setTotalPages(resp.status === 200 ? resp.data.page.totalPages : 0)
       })
       .finally(() => setTimeout(() => setLoading(false), 1000))

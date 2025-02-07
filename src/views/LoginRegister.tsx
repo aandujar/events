@@ -2,8 +2,11 @@ import { useState } from 'react'
 import Login from '@/components/Login.tsx'
 import Register from '@/components/Register.tsx'
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector  } from 'react-redux'
+import { setUser } from '@/store/userSlice.js'
 
 function LoginRegister() {
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const [showLogin, setShowLogin] = useState<boolean>(true)
 
@@ -21,6 +24,7 @@ function LoginRegister() {
 
     const doLogin = (user: string): void => {
       localStorage.setItem("eventsUser", user);
+      dispatch(setUser(user))
       navigate('/event');
     }
       
